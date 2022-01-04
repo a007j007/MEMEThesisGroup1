@@ -69,10 +69,10 @@ def getIntercepts(X,Y,theta):
 
         intersectsX = zeros(numPairs,)
         intersectsY = zeros(numPairs,)
-        print(f"intersectsX = {intersectsX}, intersectsY = {intersectsY}")
+        # print(f"intersectsX = {intersectsX}, intersectsY = {intersectsY}")
 
         for idx, pair in enumerate(pairs):
-            print(f"idx = {idx}, pair = {pair}")
+            # print(f"idx = {idx}, pair = {pair}")
             intersectsX[idx], intersectsY[idx], _ = getIntercepts(
                     append(X[pair[0]], X[pair[1]]),
                     append(Y[pair[0]], Y[pair[1]]),
@@ -83,16 +83,19 @@ def getIntercepts(X,Y,theta):
 
 ###############################################################################
         
-def getMicData(filename):
+def getMicData(filename, num_samples = None):
     given_data_txt = read_csv(filename, delimiter=",", encoding="utf8")
 
     time_column = given_data_txt.columns[0]
     mic_columns = given_data_txt.columns[1:]
 
-    fs = 1/ (float(given_data_txt[time_column][1].split(" ")[0]) 
+    fs = 1/( float(given_data_txt[time_column][1].split(" ")[0]) 
              - float(given_data_txt[time_column][0].split(" ")[0])
             )
             
-    mic_data = given_data_txt[mic_columns].to_numpy()
+    mic_data = given_data_txt[mic_columns].transpose().to_numpy()
+
+    if num_samples:
+        mic_data = mic_data[:, :num_samples]
 
     return fs, mic_data
