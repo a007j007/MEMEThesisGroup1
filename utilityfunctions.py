@@ -1,4 +1,5 @@
 from numpy import (
+    NAN,
     isscalar,
     transpose,
     arange,
@@ -52,6 +53,10 @@ def getLag (sigOne, sigTwo, fs):
 
 def getIntercepts(X,Y,theta):
     if len(X) == 2:
+        if theta[0] == theta[1]:
+            return NAN, NAN, NAN
+
+
         m1 = tan(theta[0])
         c1 = Y[0] - m1*X[0]
 
@@ -60,7 +65,7 @@ def getIntercepts(X,Y,theta):
 
         intersectsX = (c2-c1)/(m1-m2)
         intersectsY = m1*intersectsX + c1
-        pairs = 0
+        pairs = NAN
 
         return intersectsX, intersectsY, pairs
 

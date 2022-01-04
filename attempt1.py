@@ -23,8 +23,10 @@ from utilityfunctions import (
     )
 
 # %%
+datang60 = 0
 
-if 0:
+
+if datang60:
     fname = "S19_VT_60.txt"
 
 else: 
@@ -142,8 +144,13 @@ meany = np.nanmean(Yintercept)
 plot(meanx, meany, 'ob', ms=15)
 
 ax.axis('equal')
-ax.set_xlim(-0.5, 1.5)
-ax.set_ylim(-0.5, 15)
+
+if datang60:
+    ax.set_xlim(-0.5, 1.5)
+    ax.set_ylim(-0.5, 3)
+else:
+    ax.set_xlim(-0.5, 1.5)
+    ax.set_ylim(-0.5, 5)
 show()
 
 
