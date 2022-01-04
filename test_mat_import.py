@@ -4,32 +4,27 @@ import pandas as pd
 
 
 
-if 1:
-    given_data_txt = pd.read_csv("S19_VT_60.txt",delimiter=",", encoding="utf8")
+def getMicData(filename):
+    given_data_txt = pd.read_csv(filename, delimiter=",", encoding="utf8")
 
-else: 
-    given_data_txt = pd.read_csv("S19_VT_15.txt",delimiter=",", encoding="utf8")
+    time_column = given_data_txt.columns[0]
+    mic_columns = given_data_txt.columns[1:]
 
-# print(f"given_data_txt = \n{given_data_txt}")
+    fs = 1/ (float(given_data_txt[time_column][1].split(" ")[0]) - float(given_data_txt[time_column][0].split(" ")[0]))
+    mic_data = given_data_txt[mic_columns].to_numpy()
 
+    return fs, mic_data
 
-# time = given_data_txt["Time"]
+if __name__ == '__main__':
+    
+    if 1:
+        fname = "S19_VT_60.txt"
 
+    else: 
+        fname = "S19_VT_15.txt"
+    
+    
+    fs, data = getMicData(fname)
 
-# print(f"given data time = \n{ time }")
-
-
-# fs = float(time[1].split(" ")[0]) - float(time[0].split(" ")[0])
-# print(f"fs = {fs}")
-
-
-
-mics = given_data_txt.columns[1:]
-print(mics)
-
-data = given_data_txt[mics].to_numpy()
-
-
-
-# for i, _ in enumerate(data):
-#     data[i][0] = float(data[i][0].split(" ")[0])
+    print(f"fs = {fs}")
+    print(f"data shape = {np.shape(data)}")

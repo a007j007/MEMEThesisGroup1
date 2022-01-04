@@ -5,13 +5,20 @@ from scipy.signal import correlate, correlation_lags
 from math import sqrt
 from time import time
 from matplotlib.pyplot import subplots, plot, show
-from utilityfunctions import getIntercepts, constructPairs, getLag
+from utilityfunctions import *
 
 # %%
-fs = 2e5
-given_data = sio.loadmat("vraw.mat")
-sampleLength = 200
 
+if 1:
+    fname = "S19_VT_60.txt"
+
+else: 
+    fname = "S19_VT_15.txt"
+
+fs, given_data = getMicData(fname)
+
+
+sampleLength = 200
 
 # %%
 mics = np.zeros((4,sampleLength))
