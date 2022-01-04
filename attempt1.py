@@ -1,29 +1,40 @@
 # %%
 import numpy as np
 import scipy.io as sio
-from scipy.signal import correlate, correlation_lags
+
+from scipy.signal import (
+    correlate,
+    correlation_lags
+    )
+
 from math import sqrt
 from time import time
-from matplotlib.pyplot import subplots, plot, show
-from utilityfunctions import *
+from matplotlib.pyplot import (
+    subplots,
+    plot,
+    show
+    )
+
+from utilityfunctions import (
+    constructPairs,
+    getLag,
+    getIntercepts,
+    getMicData
+    )
 
 # %%
 
-if 1:
+if 0:
     fname = "S19_VT_60.txt"
 
 else: 
     fname = "S19_VT_15.txt"
 
-fs, given_data = getMicData(fname)
+fs, mics = getMicData(fname, 2000)
 
 
 sampleLength = 200
 
-# %%
-mics = np.zeros((4,sampleLength))
-for mic in [0, 1, 2, 3]:
-    mics[mic] = list(given_data["volt_raw"][0:sampleLength,mic])
 
 # %%
 mics_norm = mics
@@ -63,9 +74,9 @@ for pair_idx, pair in enumerate(pairs):
     pairSpace[pair_idx] = sqrt((each_mic_locations[0][0] - each_mic_locations[1][0])**2 + (each_mic_locations[0][1] - each_mic_locations[1][1])**2)
 
     # first mic signal
-    sigOne = mics_norm[pair[0]]
+    sigOne = mics_norm[pair[0], :]
     # second mic signal
-    sigTwo = mics_norm[pair[1]]
+    sigTwo = mics_norm[pair[1], :]
 
     pairTau[pair_idx] = getLag(sigOne, sigTwo, fs)
 
@@ -73,7 +84,9 @@ for pair_idx, pair in enumerate(pairs):
 pairThetas = np.arccos( np.divide( (pairTau*c), pairSpace ) )
 
 print(time()-t)
-print(f"pair {i}: theta = {theta}" for i, theta in enumerate(pairThetas))
+
+for i, theta in enumerate(pairThetas):
+    print((f"pair {i}: theta = {theta}")) 
 
 # %% [markdown]
 # We now have the direction of the sound source from each mic pair.\
