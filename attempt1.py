@@ -66,6 +66,8 @@ for pair_idx, pair in enumerate(pairs):
 pairThetas = np.arccos( np.divide( (pairTau*c), pairSpace ) )
 
 print(time()-t)
+print(f"pair {i}: theta = {theta}" for i, theta in enumerate(pairThetas))
+
 # %% [markdown]
 # We now have the direction of the sound source from each mic pair.\
 # We can plot this using ```matplotlib``` to graphically verify the result.
@@ -106,16 +108,16 @@ for line, _ in enumerate(X1):
     plot(x, y)
 
 Xintercept, Yintercept, _ = getIntercepts(X1, Y1, pairThetas)
-print(f"Xintercept = {Xintercept}, \nYintercept = {Yintercept}")
+# print(f"Xintercept = {Xintercept}, \nYintercept = {Yintercept}")
 
 # plot the estimates of the location of the source 
 micPairMeanPosPlot = plot(Xintercept, Yintercept, 'ok', ms=5)
 
 # find mean location of estimates
 meanx = np.nanmean(Xintercept)
-print(meanx)
+# print(meanx)
 meany = np.nanmean(Yintercept)
-print(meany)
+# print(meany)
 
 plot(meanx, meany, 'ob', ms=15)
 
