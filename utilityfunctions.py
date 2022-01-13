@@ -1,12 +1,12 @@
 from numpy import (
-    NAN,
-    isscalar,
-    transpose,
+    append,
     arange,
-    zeros,
-    array,
     argmax,
-    append
+    array,
+    isscalar,
+    mean,
+    transpose,
+    zeros
     )
 
 from scipy.signal import (
@@ -54,7 +54,7 @@ def getLag (sigOne, sigTwo, fs):
 def getIntercepts(X,Y,theta):
     if len(X) == 2:
         if theta[0] == theta[1]:
-            return NAN, NAN, NAN
+            return None, None, None
 
 
         m1 = tan(theta[0])
@@ -65,7 +65,7 @@ def getIntercepts(X,Y,theta):
 
         intersectsX = (c2-c1)/(m1-m2)
         intersectsY = m1*intersectsX + c1
-        pairs = NAN
+        pairs = None
 
         return intersectsX, intersectsY, pairs
 
@@ -99,6 +99,13 @@ def getMicData(filename, num_samples = None):
             )
             
     mic_data = given_data_txt[mic_columns].transpose().to_numpy()
+    for mic_idx, mic in enumerate(mic_data):
+        temp_mean = mean(mic)
+
+        for idx, datapoint in enumerate(mic):
+            mic_data[mic_idx, idx] = datapoint - temp_mean
+
+
 
     if num_samples:
         mic_data = mic_data[:, :num_samples]

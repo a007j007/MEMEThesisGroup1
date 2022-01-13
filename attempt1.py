@@ -24,7 +24,7 @@ from utilityfunctions import (
 
 # %%
 datang60 = 0
-
+plot=False
 
 if datang60:
     fname = "S19_VT_60.txt"
@@ -50,13 +50,13 @@ c = 340;            # [metres per second]
 
 # mic array parameters/dimensions
 mic_locations = np.array([
-                 [0, 0],
+                 [0, 0.2],
                  [0.26, 0],
                  [0.52, 0],
                  [0.78, 0]
                  ]); # [metres]
 
-
+#########################################################
 # %%
 num_mics = len(mic_locations)
 pairs, num_pairs = constructPairs(num_mics)
@@ -95,63 +95,65 @@ for i, theta in enumerate(pairThetas):
 # We can plot this using ```matplotlib``` to graphically verify the result.
 
 # %%
-###############################################################################
-## Plot results
+if plot:
+    ###############################################################################
+    ## Plot results
 
-# the X and Y locations of the midpoints between each pair of mics are in the pair_locations variable
-X1 = pair_locations[:,0]
-Y1 = pair_locations[:,1]
+    # the X and Y locations of the midpoints between each pair of mics are in the pair_locations variable
+    X1 = pair_locations[:,0]
+    Y1 = pair_locations[:,1]
 
-# to plot a quiver diagram, we need the U and V components of the vectors:
-U = np.cos(pairThetas)
-V = np.sin(pairThetas)
+    # to plot a quiver diagram, we need the U and V components of the vectors:
+    U = np.cos(pairThetas)
+    V = np.sin(pairThetas)
 
-# get another point on the ray off in the distance
-scaleLine = 100
-X2 = X1 + scaleLine*U
-Y2 = Y1 + scaleLine*V
+    # get another point on the ray off in the distance
+    scaleLine = 100
+    X2 = X1 + scaleLine*U
+    Y2 = Y1 + scaleLine*V
 
-# create the figure, axes
-fig, ax = subplots()
+    # create the figure, axes
+    fig, ax = subplots()
 
-# plot the mic locations
-micPosPlot = plot(mic_locations[:,0], mic_locations[:,1], 'xr', ms=15)
+    # plot the mic locations
+    micPosPlot = plot(mic_locations[:,0], mic_locations[:,1], 'xr', ms=15)
 
-# plot the "pair locations" 
-micPairMeanPosPlot = plot(X1,Y1, 'og')
+    # plot the "pair locations" 
+    micPairMeanPosPlot = plot(X1,Y1, 'og')
 
-# plot a ray to represent the estimated angle of arrival "at" each mic pair
-# for line, _ in enumerate(X1):
-#     plot([X1[line], X2[line]], [Y1[line], Y2[line]])
+    # plot a ray to represent the estimated angle of arrival "at" each mic pair
+    # for line, _ in enumerate(X1):
+    #     plot([X1[line], X2[line]], [Y1[line], Y2[line]])
 
-for line, _ in enumerate(X1):
-    x = np.append(X1[line], X2[line])
-    y = np.append(Y1[line], Y2[line])
-    plot(x, y)
+    for line, _ in enumerate(X1):
+        x = np.append(X1[line], X2[line])
+        y = np.append(Y1[line], Y2[line])
+        plot(x, y)
 
-Xintercept, Yintercept, _ = getIntercepts(X1, Y1, pairThetas)
-# print(f"Xintercept = {Xintercept}, \nYintercept = {Yintercept}")
+    Xintercept, Yintercept, _ = getIntercepts(X1, Y1, pairThetas)
+    # print(f"Xintercept = {Xintercept}, \nYintercept = {Yintercept}")
 
-# plot the estimates of the location of the source 
-micPairMeanPosPlot = plot(Xintercept, Yintercept, 'ok', ms=5)
+    # plot the estimates of the location of the source 
+    micPairMeanPosPlot = plot(Xintercept, Yintercept, 'ok', ms=5)
 
-# find mean location of estimates
-meanx = np.nanmean(Xintercept)
-# print(meanx)
-meany = np.nanmean(Yintercept)
-# print(meany)
+    # find mean location of estimates
+    meanx = np.nanmean(Xintercept)
+    # print(meanx)
+    meany = np.nanmean(Yintercept)
+    # print(meany)
+    range_of_estimate = ( (max(Xintercept) - min(Xintercept))**2 + (max(Xintercept) - min(Xintercept))**2 )**0.5
 
-plot(meanx, meany, 'ob', ms=15)
+    plot(meanx, meany, 'ob', ms=15, fillstyle="none")
 
-ax.axis('equal')
+    ax.axis('equal')
 
-if datang60:
-    ax.set_xlim(-0.5, 1.5)
-    ax.set_ylim(-0.5, 3)
-else:
-    ax.set_xlim(-0.5, 1.5)
-    ax.set_ylim(-0.5, 5)
-show()
+    if datang60:
+        ax.set_xlim(-0.5, 1.5)
+        ax.set_ylim(-0.5, 3)
+    else:
+        ax.set_xlim(-0.5, 1.5)
+        ax.set_ylim(-0.5, 5)
+    show()
 
 
 
